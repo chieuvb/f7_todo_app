@@ -1,8 +1,12 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
 
-import 'data/task_item.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'modal/show_modal.dart';
 import 'modal/task_body.dart';
+import 'modal/task_item.dart';
 
 void main() {
   runApp(
@@ -14,6 +18,23 @@ void main() {
   );
 }
 
+List<TaskItem> items = [];
+
+Future<List<TaskItem>> readTasks() async {
+  final String jsonString = await rootBundle.loadString('assets/data.json');
+  final List<dynamic> json = jsonDecode(jsonString);
+  return json.map((item) => TaskItem.fromJson(item)).toList();
+}
+
+void writeTask(TaskItem tasks) async {
+  final jsonString = jsonEncode(tasks);
+  await File('assets/data.json').writeAsString(jsonString);
+}
+
+Future<void> appLoad() async {
+  items = await readTasks();
+}
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -22,7 +43,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final List<TaskItem> items = [];
+  @override
+  void initState() {
+    super.initState();
+    appLoad();
+  }
 
   void _addTask(String name) {
     TaskItem item = TaskItem(
@@ -32,6 +57,8 @@ class _MyAppState extends State<MyApp> {
     );
     setState(() {
       items.add(item);
+
+      writeTask(item);
     });
   }
 

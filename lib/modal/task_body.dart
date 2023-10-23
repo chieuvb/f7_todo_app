@@ -1,5 +1,5 @@
 import 'package:confirm_dialog/confirm_dialog.dart';
-import 'package:f7_todo_app/data/task_item.dart';
+import 'package:f7_todo_app/modal/task_item.dart';
 import 'package:flutter/material.dart';
 
 class NewTask extends StatelessWidget {
