@@ -1,14 +1,16 @@
-import 'dart:convert';
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
+import 'logic/interact.dart';
 import 'modal/show_modal.dart';
 import 'modal/task_body.dart';
 import 'modal/task_item.dart';
 
+Interact inter = Interact();
+List<TaskItem> tasks = [];
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     const MaterialApp(
       title: 'To do',
@@ -16,23 +18,6 @@ void main() {
       debugShowCheckedModeBanner: false,
     ),
   );
-}
-
-List<TaskItem> items = [];
-
-Future<List<TaskItem>> readTasks() async {
-  final String jsonString = await rootBundle.loadString('assets/data.json');
-  final List<dynamic> json = jsonDecode(jsonString);
-  return json.map((item) => TaskItem.fromJson(item)).toList();
-}
-
-void writeTask(TaskItem tasks) async {
-  final jsonString = jsonEncode(tasks);
-  await File('assets/data.json').writeAsString(jsonString);
-}
-
-Future<void> appLoad() async {
-  items = await readTasks();
 }
 
 class MyApp extends StatefulWidget {
@@ -46,34 +31,53 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    appLoad();
+    loadTask();
   }
 
-  void _addTask(String name) {
+  void loadTask() async {
+    List<TaskItem> tasksList = await inter.readTasks();
+    setState(() {
+      tasks = tasksList;
+    });
+    if (kDebugMode) {
+      print('loadTask ok');
+    }
+  }
+
+  void addTask(String name) {
     TaskItem item = TaskItem(
       id: DateTime.now().toString(),
       content: name,
-      complete: false,
+      status: false,
     );
     setState(() {
-      items.add(item);
-
-      writeTask(item);
+      tasks.add(item);
+      inter.writeTasks(tasks);
+      if (kDebugMode) {
+        print('addTask ok');
+      }
     });
   }
 
-  void _completed(String id) {
-    int ind = items.indexWhere((item) => item.id == id);
-    bool comp = items[ind].complete;
-
+  void updateTask(String id) {
+    int ind = tasks.indexWhere((item) => item.id == id);
+    bool comp = tasks[ind].status;
     setState(() {
-      items[ind].complete = comp ? false : true;
+      tasks[ind].status = comp ? false : true;
+      inter.writeTasks(tasks);
+      if (kDebugMode) {
+        print('updateTask ok ${tasks[ind].status}');
+      }
     });
   }
 
-  void _deleteTask(String id) {
+  void deleteTask(String id) {
     setState(() {
-      items.removeWhere((item) => item.id == id);
+      tasks.removeWhere((item) => item.id == id);
+      inter.writeTasks(tasks);
+      if (kDebugMode) {
+        print('deleteTask ok ${tasks.length}');
+      }
     });
   }
 
@@ -95,12 +99,12 @@ class _MyAppState extends State<MyApp> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
         child: Column(
-          children: items
+          children: tasks
               .map((item) => NewTask(
                     item,
-                    index: items.indexOf(item),
-                    completed: _completed,
-                    delTask: _deleteTask,
+                    index: tasks.indexOf(item),
+                    completed: updateTask,
+                    delTask: deleteTask,
                   ))
               .toList(),
         ),
@@ -117,7 +121,7 @@ class _MyAppState extends State<MyApp> {
             ),
             builder: (BuildContext context) {
               return ShowModal(
-                addTask: _addTask,
+                addTask: addTask,
               );
             },
           );

@@ -25,7 +25,7 @@ class NewTask extends StatelessWidget {
         height: 48,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: item.complete ? Colors.blueGrey : Colors.lightBlue,
+          color: item.status ? Colors.blueGrey : Colors.lightBlue,
         ),
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -34,7 +34,7 @@ class NewTask extends StatelessWidget {
           children: [
             Text(
               item.content,
-              style: item.complete
+              style: item.status
                   ? const TextStyle(
                       overflow: TextOverflow.ellipsis,
                       color: Colors.white,

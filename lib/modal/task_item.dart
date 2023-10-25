@@ -1,19 +1,19 @@
 class TaskItem {
   String id;
   String content;
-  bool complete;
+  bool status;
 
   TaskItem({
     required this.id,
     required this.content,
-    required this.complete,
+    required this.status,
   });
 
   factory TaskItem.fromJson(Map<String, dynamic> json) {
     return TaskItem(
       id: json['id'],
       content: json['content'],
-      complete: json['complete'],
+      status: json['status'],
     );
   }
 
@@ -21,7 +21,7 @@ class TaskItem {
     return {
       'id': id,
       'content': content,
-      'complete': complete,
+      'status': status,
     };
   }
 }
