@@ -59,6 +59,17 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void editTask(String id, String newContent) {
+    int ind = tasks.indexWhere((item) => item.id == id);
+    setState(() {
+      tasks[ind].content = newContent;
+      inter.writeTasks(tasks);
+      if (kDebugMode) {
+        print('editTask ok ${tasks[ind].content}');
+      }
+    });
+  }
+
   void updateTask(String id) {
     int ind = tasks.indexWhere((item) => item.id == id);
     bool comp = tasks[ind].status;
@@ -103,7 +114,8 @@ class _MyAppState extends State<MyApp> {
               .map((item) => NewTask(
                     item,
                     index: tasks.indexOf(item),
-                    completed: updateTask,
+                    editTask: editTask,
+                    updateTask: updateTask,
                     delTask: deleteTask,
                   ))
               .toList(),
@@ -120,8 +132,10 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             builder: (BuildContext context) {
-              return ShowModal(
-                addTask: addTask,
+              return Modal(
+                id: 'none',
+                action: 'add',
+                actionTask: addTask,
               );
             },
           );

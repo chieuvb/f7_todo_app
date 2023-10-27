@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
 
-class ShowModal extends StatelessWidget {
-  ShowModal({super.key, required this.addTask});
+class Modal extends StatelessWidget {
+  Modal(
+      {super.key,
+      required this.id,
+      required this.action,
+      required this.actionTask});
+
+  final String id;
+  final String action;
+  final Function actionTask;
 
   final TextEditingController controller = TextEditingController();
-  final Function addTask;
 
-  void _addNewTask(BuildContext context) {
+  void _actionTask(String id, BuildContext context) {
     if (controller.text.isEmpty) {
       return;
     }
-    addTask(controller.text);
+    if (action == 'add') {
+      actionTask(controller.text);
+    } else {
+      actionTask(id, controller.text);
+    }
     Navigator.pop(context);
   }
 
@@ -23,13 +34,13 @@ class ShowModal extends StatelessWidget {
         height: 80,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+          children: <Widget>[
             Expanded(
               child: TextField(
                 controller: controller,
-                decoration: const InputDecoration(
-                  labelText: 'New task',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: action == 'Add' ? 'New task' : 'Edit task',
+                  border: const OutlineInputBorder(),
                 ),
               ),
             ),
@@ -37,8 +48,8 @@ class ShowModal extends StatelessWidget {
               width: 16,
             ),
             ElevatedButton(
-              onPressed: () => _addNewTask(context),
-              child: const Text('Add'),
+              onPressed: () => _actionTask(id, context),
+              child: Text(action),
             ),
           ],
         ),
