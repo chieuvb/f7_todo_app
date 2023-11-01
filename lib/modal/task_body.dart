@@ -56,7 +56,9 @@ class NewTask extends StatelessWidget {
         height: 64,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: item.status ? Colors.black54 : Colors.lightBlue,
+          color: item.status
+              ? Colors.black54
+              : (index % 2 == 0 ? Colors.lightBlue : Colors.green),
         ),
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.symmetric(horizontal: 16),
