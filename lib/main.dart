@@ -107,17 +107,24 @@ class _MyAppState extends State<MyApp> {
         backgroundColor: Colors.amber,
       ),
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      body: tasks.isEmpty
+          ? const Center(
+        child: Text(
+          'No tasks',
+          style: TextStyle(fontSize: 24),
+        ),
+      )
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(10),
         child: Column(
           children: tasks
               .map((item) => NewTask(
-                    item,
-                    index: tasks.indexOf(item),
-                    editTask: editTask,
-                    updateTask: updateTask,
-                    delTask: deleteTask,
-                  ))
+            item,
+            index: tasks.indexOf(item),
+            editTask: editTask,
+            updateTask: updateTask,
+            delTask: deleteTask,
+          ))
               .toList(),
         ),
       ),
