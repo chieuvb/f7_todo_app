@@ -135,6 +135,7 @@ class _MyAppState extends State<MyApp> {
               return Modal(
                 id: 'none',
                 action: 'add',
+                content: '',
                 actionTask: addTask,
               );
             },

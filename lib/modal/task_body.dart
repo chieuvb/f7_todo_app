@@ -52,53 +52,64 @@ class NewTask extends StatelessWidget {
         }
       },
       child: Container(
-        width: double.infinity,
         height: 64,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(10),
           color: item.status
-              ? Colors.black54
+              ? Colors.black38
               : (index % 2 == 0 ? Colors.lightBlue : Colors.green),
         ),
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              item.content,
-              style: item.status
-                  ? const TextStyle(
-                      overflow: TextOverflow.ellipsis,
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.normal,
-                      decoration: TextDecoration.lineThrough,
-                    )
-                  : const TextStyle(
-                      overflow: TextOverflow.ellipsis,
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800,
-                    ),
+            Container(
+              margin: const EdgeInsets.only(right: 16),
+              child: InkWell(
+                child: Icon(
+                  item.status
+                      ? Icons.check_circle_rounded
+                      : Icons.circle_outlined,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                item.content,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: item.status
+                    ? const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        decoration: TextDecoration.lineThrough,
+                      )
+                    : const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+              ),
             ),
             InkWell(
               onTap: () {
                 if (kDebugMode) {
-                  print('onLongPress ${item.id}');
+                  print('editPress ${item.id}');
                 }
                 showModalBottomSheet(
                   backgroundColor: Colors.amber[100],
                   context: context,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(8),
+                      top: Radius.circular(10),
                     ),
                   ),
                   builder: (BuildContext context) {
                     return Modal(
                       id: item.id,
                       action: 'edit',
+                      content: item.content,
                       actionTask: editTask,
                     );
                   },
