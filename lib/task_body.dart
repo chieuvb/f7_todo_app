@@ -1,5 +1,5 @@
-import 'package:f7_todo_app/modal/show_modal.dart';
-import 'package:f7_todo_app/modal/task_item.dart';
+import 'package:f7_todo_app/show_modal.dart';
+import 'package:f7_todo_app/task_item.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -78,7 +78,6 @@ class NewTask extends StatelessWidget {
             Expanded(
               child: Text(
                 item.content,
-                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: item.status
                     ? const TextStyle(
@@ -92,34 +91,37 @@ class NewTask extends StatelessWidget {
                       ),
               ),
             ),
-            InkWell(
-              onTap: () {
-                if (kDebugMode) {
-                  print('editPress ${item.id}');
-                }
-                showModalBottomSheet(
-                  backgroundColor: Colors.amber[100],
-                  context: context,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(10),
+            Container(
+              padding: const EdgeInsets.only(left: 16),
+              child: InkWell(
+                onTap: () {
+                  if (kDebugMode) {
+                    print('editPress ${item.id}');
+                  }
+                  showModalBottomSheet(
+                    backgroundColor: Colors.amber[100],
+                    context: context,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(10),
+                      ),
                     ),
-                  ),
-                  builder: (BuildContext context) {
-                    return Modal(
-                      id: item.id,
-                      action: 'edit',
-                      content: item.content,
-                      actionTask: editTask,
-                    );
-                  },
-                );
-              },
-              child: const Icon(
-                Icons.border_color_rounded,
-                color: Colors.white,
+                    builder: (BuildContext context) {
+                      return Modal(
+                        id: item.id,
+                        action: 'edit',
+                        content: item.content,
+                        actionTask: editTask,
+                      );
+                    },
+                  );
+                },
+                child: const Icon(
+                  Icons.border_color_rounded,
+                  color: Colors.white,
+                ),
               ),
-            ),
+            )
           ],
         ),
       ),

@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../modal/task_item.dart';
+import 'task_item.dart';
 
 class Interact {
   Future<List<TaskItem>> readTasks() async {

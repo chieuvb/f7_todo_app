@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'logic/interact.dart';
-import 'modal/show_modal.dart';
-import 'modal/task_body.dart';
-import 'modal/task_item.dart';
+import 'data_control.dart';
+import 'show_modal.dart';
+import 'task_body.dart';
+import 'task_item.dart';
 
-Interact inter = Interact();
+Interact dat = Interact();
 List<TaskItem> tasks = [];
 
 void main() {
@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void loadTask() async {
-    List<TaskItem> tasksList = await inter.readTasks();
+    List<TaskItem> tasksList = await dat.readTasks();
     setState(() {
       tasks = tasksList;
     });
@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
     );
     setState(() {
       tasks.add(item);
-      inter.writeTasks(tasks);
+      dat.writeTasks(tasks);
       if (kDebugMode) {
         print('addTask ok');
       }
@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
     int ind = tasks.indexWhere((item) => item.id == id);
     setState(() {
       tasks[ind].content = newContent;
-      inter.writeTasks(tasks);
+      dat.writeTasks(tasks);
       if (kDebugMode) {
         print('editTask ok ${tasks[ind].content}');
       }
@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
     bool comp = tasks[ind].status;
     setState(() {
       tasks[ind].status = comp ? false : true;
-      inter.writeTasks(tasks);
+      dat.writeTasks(tasks);
       if (kDebugMode) {
         print('updateTask ok ${tasks[ind].status}');
       }
@@ -85,7 +85,7 @@ class _MyAppState extends State<MyApp> {
   void deleteTask(String id) {
     setState(() {
       tasks.removeWhere((item) => item.id == id);
-      inter.writeTasks(tasks);
+      dat.writeTasks(tasks);
       if (kDebugMode) {
         print('deleteTask ok ${tasks.length}');
       }
@@ -109,25 +109,25 @@ class _MyAppState extends State<MyApp> {
       backgroundColor: Colors.white,
       body: tasks.isEmpty
           ? const Center(
-        child: Text(
-          'No tasks',
-          style: TextStyle(fontSize: 24),
-        ),
-      )
+              child: Text(
+                'No tasks',
+                style: TextStyle(fontSize: 24),
+              ),
+            )
           : SingleChildScrollView(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: tasks
-              .map((item) => NewTask(
-            item,
-            index: tasks.indexOf(item),
-            editTask: editTask,
-            updateTask: updateTask,
-            delTask: deleteTask,
-          ))
-              .toList(),
-        ),
-      ),
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: tasks
+                    .map((item) => NewTask(
+                          item,
+                          index: tasks.indexOf(item),
+                          editTask: editTask,
+                          updateTask: updateTask,
+                          delTask: deleteTask,
+                        ))
+                    .toList(),
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(

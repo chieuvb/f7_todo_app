@@ -41,6 +41,8 @@ class Modal extends StatelessWidget {
             Expanded(
               child: TextField(
                 maxLines: null,
+                autofocus: true,
+                autocorrect: true,
                 controller: controller,
                 decoration: InputDecoration(
                   labelText: action == 'add' ? 'New task' : 'Edit task',
