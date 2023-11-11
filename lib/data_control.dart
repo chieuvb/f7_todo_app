@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'task_item.dart';
 
-class Interact {
+class DataControl {
   Future<List<TaskItem>> readTasks() async {
     List<TaskItem> tasks = [];
     try {

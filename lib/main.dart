@@ -6,7 +6,7 @@ import 'show_modal.dart';
 import 'task_body.dart';
 import 'task_item.dart';
 
-Interact dat = Interact();
+DataControl dat = DataControl();
 List<TaskItem> tasks = [];
 
 void main() {
