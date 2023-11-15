@@ -7,46 +7,40 @@ import 'package:path_provider/path_provider.dart';
 import 'task_item.dart';
 
 class DataControl {
+  Future<File> getTaskFile() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return File('${directory.path}/task-list.json');
+  }
+
   Future<List<TaskItem>> readTasks() async {
     List<TaskItem> tasks = [];
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/task-list.json');
+      final file = await getTaskFile();
       if (await file.exists()) {
         String jsonString = await file.readAsString();
-        if (jsonString.isEmpty) {
-          return [];
+        if (jsonString.isNotEmpty) {
+          List<dynamic> json = jsonDecode(jsonString);
+          tasks = json.map((task) => TaskItem.fromJson(task)).toList();
         }
-        List<dynamic> json = jsonDecode(jsonString);
-        tasks = json.map((task) => TaskItem.fromJson(task)).toList();
       } else {
         await file.create(recursive: true);
+        debugPrint('create file ok');
       }
-      if (kDebugMode) {
-        print('readTask ok');
-      }
+      debugPrint('readTask ok');
     } catch (ex) {
-      if (kDebugMode) {
-        print('Read error: $ex');
-      }
+      debugPrint('Read error: $ex');
     }
     return tasks;
   }
 
   Future<void> writeTasks(List<TaskItem> tasks) async {
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/task-list.json');
-
+      final file = await getTaskFile();
       final jsonString = jsonEncode(tasks);
       await file.writeAsString(jsonString);
-      if (kDebugMode) {
-        print('writeTask ok');
-      }
+      debugPrint('writeTask ok');
     } catch (ex) {
-      if (kDebugMode) {
-        print('Write error: $ex');
-      }
+      debugPrint('Write error: $ex');
     }
   }
 }
